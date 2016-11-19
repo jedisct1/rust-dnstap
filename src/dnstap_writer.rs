@@ -91,7 +91,7 @@ impl DNSTapWriter {
     }
 }
 
-/// Sender is a cloneable structure that to send DNS messages.
+/// Sender is a cloneable structure to send DNS messages.
 #[derive(Clone)]
 pub struct Sender(channel::SyncSender<DNSMessage>);
 
