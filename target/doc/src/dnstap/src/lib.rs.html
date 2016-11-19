@@ -58,7 +58,12 @@
 <span id="14">14</span>
 <span id="15">15</span>
 <span id="16">16</span>
+<span id="17">17</span>
+<span id="18">18</span>
+<span id="19">19</span>
 </pre><pre class='rust '>
+<span class='doccomment'>//! An implementation of the dnstap protocol</span>
+
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>framestream</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>mio</span>;
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>protobuf</span>;
@@ -74,6 +79,7 @@
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>dnstap_pb</span>::<span class='ident'>SocketProtocol</span>;
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>dns_message</span>::<span class='op'>*</span>;
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>dnstap_builder</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>dnstap_writer</span>::{<span class='ident'>DNSTapWriter</span>, <span class='ident'>Sender</span>};
 </pre>
 </section>

@@ -303,6 +303,14 @@
 <span id="259">259</span>
 <span id="260">260</span>
 <span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>net</span>::<span class='ident'>IpAddr</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>time</span>;
@@ -310,6 +318,12 @@
 <span class='kw'>use</span> ::{<span class='ident'>MessageType</span>, <span class='ident'>SocketFamily</span>, <span class='ident'>SocketProtocol</span>};
 <span class='kw'>use</span> ::<span class='ident'>dnstap_pb</span>;
 
+<span class='doccomment'>/// A DNS message</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// All properties are optional except the message type</span>
+<span class='doccomment'>///</span>
+<span class='doccomment'>/// Although `socket_family` can be explicitly set, it can also be automatically</span>
+<span class='doccomment'>/// inferred from `query_address` or `response_address` if these are present.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Hash</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>DNSMessage</span> {
     <span class='kw'>pub</span> <span class='ident'>identity</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>,
@@ -329,6 +343,7 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>DNSMessage</span> {
+    <span class='doccomment'>/// Returns a minimal DNS message</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>(<span class='ident'>identity</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>,
                <span class='ident'>version</span>: <span class='prelude-ty'>Option</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>u8</span><span class='op'>&gt;&gt;</span>,
                <span class='ident'>message_type</span>: <span class='ident'>MessageType</span>)
@@ -351,6 +366,7 @@
         }
     }
 
+    <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_protobuf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>dnstap_pb</span>::<span class='ident'>Dnstap</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>d</span> <span class='op'>=</span> <span class='ident'>dnstap_pb</span>::<span class='ident'>Dnstap</span>::<span class='ident'>new</span>();
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>identity</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>identity</span> {
