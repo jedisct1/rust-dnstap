@@ -72,6 +72,7 @@ impl DNSTapWriter {
     }
 }
 
+#[derive(Clone)]
 pub struct Sender(channel::SyncSender<DNSMessage>);
 
 impl Sender {
