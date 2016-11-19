@@ -113,3 +113,149 @@ impl DNSMessage {
         d
     }
 }
+
+#[derive(Clone, Hash)]
+pub struct AuthQuery {
+    pub identity: Option<Vec<u8>>,
+    pub version: Option<Vec<u8>>,
+    pub socket_protocol: SocketProtocol,
+    pub query_address: IpAddr,
+    pub query_port: u16,
+    pub query_time: time::Duration,
+    pub query_packet: Vec<u8>,
+}
+
+impl Into<DNSMessage> for AuthQuery {
+    fn into(self) -> DNSMessage {
+        let mut dns_message = DNSMessage::new(self.identity, self.version, MessageType::AUTH_QUERY);
+        dns_message.socket_protocol = Some(self.socket_protocol);
+        dns_message.query_address = Some(self.query_address);
+        dns_message.query_port = Some(self.query_port);
+        dns_message.query_time = Some(self.query_time);
+        dns_message.query_packet = Some(self.query_packet);
+        dns_message
+    }
+}
+
+#[derive(Clone, Hash)]
+pub struct AuthResponse {
+    pub identity: Option<Vec<u8>>,
+    pub version: Option<Vec<u8>>,
+    pub message_type: MessageType,
+    pub socket_protocol: SocketProtocol,
+    pub query_address: IpAddr,
+    pub query_port: u16,
+    pub query_time: time::Duration,
+    pub response_packet: Vec<u8>,
+}
+
+impl Into<DNSMessage> for AuthResponse {
+    fn into(self) -> DNSMessage {
+        let mut dns_message =
+            DNSMessage::new(self.identity, self.version, MessageType::AUTH_RESPONSE);
+        dns_message.socket_protocol = Some(self.socket_protocol);
+        dns_message.query_address = Some(self.query_address);
+        dns_message.query_port = Some(self.query_port);
+        dns_message.query_time = Some(self.query_time);
+        dns_message.response_packet = Some(self.response_packet);
+        dns_message
+    }
+}
+
+#[derive(Clone, Hash)]
+pub struct ResolverQuery {
+    pub identity: Option<Vec<u8>>,
+    pub version: Option<Vec<u8>>,
+    pub socket_protocol: SocketProtocol,
+    pub query_time: time::Duration,
+    pub query_packet: Vec<u8>,
+    pub response_address: IpAddr,
+    pub response_port: u16,
+    pub bailiwick: String,
+}
+
+impl Into<DNSMessage> for ResolverQuery {
+    fn into(self) -> DNSMessage {
+        let mut dns_message =
+            DNSMessage::new(self.identity, self.version, MessageType::RESOLVER_QUERY);
+        dns_message.socket_protocol = Some(self.socket_protocol);
+        dns_message.query_time = Some(self.query_time);
+        dns_message.query_packet = Some(self.query_packet);
+        dns_message.response_address = Some(self.response_address);
+        dns_message.response_port = Some(self.response_port);
+        dns_message.bailiwick = Some(self.bailiwick);
+        dns_message
+    }
+}
+
+#[derive(Clone, Hash)]
+pub struct ResolverResponse {
+    pub identity: Option<Vec<u8>>,
+    pub version: Option<Vec<u8>>,
+    pub socket_protocol: SocketProtocol,
+    pub query_time: time::Duration,
+    pub response_address: IpAddr,
+    pub response_port: u16,
+    pub response_packet: Vec<u8>,
+    pub response_time: time::Duration,
+    pub bailiwick: String,
+}
+
+impl Into<DNSMessage> for ResolverResponse {
+    fn into(self) -> DNSMessage {
+        let mut dns_message =
+            DNSMessage::new(self.identity, self.version, MessageType::RESOLVER_RESPONSE);
+        dns_message.socket_protocol = Some(self.socket_protocol);
+        dns_message.query_time = Some(self.query_time);
+        dns_message.response_address = Some(self.response_address);
+        dns_message.response_port = Some(self.response_port);
+        dns_message.response_packet = Some(self.response_packet);
+        dns_message.response_time = Some(self.response_time);
+        dns_message.bailiwick = Some(self.bailiwick);
+        dns_message
+    }
+}
+
+#[derive(Clone, Hash)]
+pub struct ClientQuery {
+    pub identity: Option<Vec<u8>>,
+    pub version: Option<Vec<u8>>,
+    pub socket_family: SocketFamily,
+    pub socket_protocol: SocketProtocol,
+    pub query_time: time::Duration,
+    pub query_packet: Vec<u8>,
+}
+
+impl Into<DNSMessage> for ClientQuery {
+    fn into(self) -> DNSMessage {
+        let mut dns_message =
+            DNSMessage::new(self.identity, self.version, MessageType::CLIENT_QUERY);
+        dns_message.socket_family = Some(self.socket_family);
+        dns_message.socket_protocol = Some(self.socket_protocol);
+        dns_message.query_time = Some(self.query_time);
+        dns_message.query_packet = Some(self.query_packet);
+        dns_message
+    }
+}
+
+#[derive(Clone, Hash)]
+pub struct ClientResponse {
+    pub identity: Option<Vec<u8>>,
+    pub version: Option<Vec<u8>>,
+    pub socket_family: SocketFamily,
+    pub socket_protocol: SocketProtocol,
+    pub response_time: time::Duration,
+    pub response_packet: Vec<u8>,
+}
+
+impl Into<DNSMessage> for ClientResponse {
+    fn into(self) -> DNSMessage {
+        let mut dns_message =
+            DNSMessage::new(self.identity, self.version, MessageType::CLIENT_RESPONSE);
+        dns_message.socket_family = Some(self.socket_family);
+        dns_message.socket_protocol = Some(self.socket_protocol);
+        dns_message.response_time = Some(self.response_time);
+        dns_message.response_packet = Some(self.response_packet);
+        dns_message
+    }
+}

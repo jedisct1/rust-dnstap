@@ -12,5 +12,5 @@ pub use dnstap_pb::Message_Type as MessageType;
 pub use dnstap_pb::SocketFamily;
 pub use dnstap_pb::SocketProtocol;
 
-pub use dns_message::DNSMessage;
+pub use dns_message::*;
 pub use dnstap_writer::DNSTapWriter;
