@@ -91,7 +91,7 @@
 
 <span class='kw'>const</span> <span class='ident'>DEFAULT_BACKLOG</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>4096</span>;
 
-<span class='doccomment'>/// Builds a DNSTapWriter service</span>
+<span class='doccomment'>/// Builds a DNSTapWriter service.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Hash</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>DNSTapBuilder</span> {
     <span class='kw'>pub</span> <span class='ident'>backlog</span>: <span class='ident'>usize</span>,
@@ -106,13 +106,13 @@
         }
     }
 
-    <span class='doccomment'>/// Maximum number of messages to keep in queue</span>
+    <span class='doccomment'>/// Maximum number of messages to keep in queue.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>backlog</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>backlog</span>: <span class='ident'>usize</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span> {
         <span class='self'>self</span>.<span class='ident'>backlog</span> <span class='op'>=</span> <span class='ident'>backlog</span>;
         <span class='self'>self</span>
     }
 
-    <span class='doccomment'>/// Path to the UNIX socket to send dnstap data to</span>
+    <span class='doccomment'>/// Path to the UNIX socket to send dnstap data to.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>unix_socket_path</span><span class='op'>&lt;</span><span class='ident'>P</span><span class='op'>&gt;</span>(<span class='kw-2'>mut</span> <span class='self'>self</span>, <span class='ident'>path</span>: <span class='ident'>P</span>) <span class='op'>-&gt;</span> <span class='self'>Self</span>
         <span class='kw'>where</span> <span class='ident'>P</span>: <span class='ident'>AsRef</span><span class='op'>&lt;</span><span class='ident'>Path</span><span class='op'>&gt;</span>
     {
@@ -120,7 +120,7 @@
         <span class='self'>self</span>
     }
 
-    <span class='doccomment'>/// Spawns a new task to start the service</span>
+    <span class='doccomment'>/// Spawns a new task to start the service.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>start</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>DNSTapWriter</span> {
         <span class='ident'>DNSTapWriter</span>::<span class='ident'>start</span>(<span class='self'>self</span>)
     }
