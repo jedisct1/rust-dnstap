@@ -107,7 +107,7 @@ impl DNSMessage {
         }
         if let Some(response_time) = self.response_time {
             msg.set_response_time_sec(response_time.as_secs());
-            msg.set_query_time_nsec(response_time.subsec_nanos());
+            msg.set_response_time_nsec(response_time.subsec_nanos());
         }
         d.set_message(msg);
         d
