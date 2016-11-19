@@ -78,12 +78,6 @@ impl DNSTapWriter {
         self.tid.join()
     }
 
-    /// Sends a DNS message.
-    #[inline]
-    pub fn send(&self, dns_message: DNSMessage) -> Result<(), channel::TrySendError<DNSMessage>> {
-        self.dnstap_tx.try_send(dns_message)
-    }
-
     /// Returns a cloneable `Sender` object that can used to send DNS messages.
     #[inline]
     pub fn sender(&self) -> Sender {
