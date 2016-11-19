@@ -61,7 +61,22 @@ impl DNSTapWriter {
         self.tid.join()
     }
 
+    #[inline]
     pub fn send(&self, dns_message: DNSMessage) -> Result<(), channel::TrySendError<DNSMessage>> {
         self.dnstap_tx.try_send(dns_message)
+    }
+
+    #[inline]
+    pub fn sender(&self) -> Sender {
+        Sender(self.dnstap_tx.clone())
+    }
+}
+
+pub struct Sender(channel::SyncSender<DNSMessage>);
+
+impl Sender {
+    #[inline]
+    pub fn send(&self, dns_message: DNSMessage) -> Result<(), channel::TrySendError<DNSMessage>> {
+        self.0.try_send(dns_message)
     }
 }

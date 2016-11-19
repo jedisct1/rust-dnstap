@@ -13,4 +13,4 @@ pub use dnstap_pb::SocketFamily;
 pub use dnstap_pb::SocketProtocol;
 
 pub use dns_message::*;
-pub use dnstap_writer::DNSTapWriter;
+pub use dnstap_writer::{DNSTapWriter, Sender};
