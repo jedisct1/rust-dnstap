@@ -4,9 +4,9 @@ use std::time;
 use ::{MessageType, SocketFamily, SocketProtocol};
 use ::dnstap_pb;
 
-/// A DNS message
+/// A DNS message.
 ///
-/// All properties are optional except the message type
+/// All properties are optional except the message type.
 ///
 /// Although `socket_family` can be explicitly set, it can also be automatically
 /// inferred from `query_address` or `response_address` if these are present.

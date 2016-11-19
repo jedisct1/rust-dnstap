@@ -1,7 +1,13 @@
 [package]
 name = "dnstap"
 version = "0.1.0"
+description = "An implementation of the dnstap protocol"
 authors = ["Frank Denis <github@pureftpd.org>"]
+keywords = ["dns"]
+readme = "README.md"
+license = "ISC"
+homepage = "https://github.com/jedisct1/rust-dnstap"
+repository = "https://github.com/jedisct1/rust-dnstap"
 
 [dependencies]
 framestream = { git="https://github.com/jedisct1/rust-framestream.git" }

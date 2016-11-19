@@ -1,4 +1,8 @@
-//! An implementation of the dnstap protocol
+
+//! An implementation of the dnstap protocol.
+//!
+//! This crate implements the sender part of the [dnstap](http://dnstap.info/) protocol,
+//! a flexible, structured binary log format for DNS software.
 
 extern crate framestream;
 extern crate mio;
