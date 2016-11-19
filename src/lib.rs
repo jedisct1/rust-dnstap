@@ -1,3 +1,5 @@
+//! An implementation of the dnstap protocol
+
 extern crate framestream;
 extern crate mio;
 extern crate protobuf;
@@ -13,4 +15,5 @@ pub use dnstap_pb::SocketFamily;
 pub use dnstap_pb::SocketProtocol;
 
 pub use dns_message::*;
+pub use dnstap_builder::*;
 pub use dnstap_writer::{DNSTapWriter, Sender};

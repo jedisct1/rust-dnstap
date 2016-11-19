@@ -4,6 +4,12 @@ use std::time;
 use ::{MessageType, SocketFamily, SocketProtocol};
 use ::dnstap_pb;
 
+/// A DNS message
+///
+/// All properties are optional except the message type
+///
+/// Although `socket_family` can be explicitly set, it can also be automatically
+/// inferred from `query_address` or `response_address` if these are present.
 #[derive(Clone, Hash)]
 pub struct DNSMessage {
     pub identity: Option<Vec<u8>>,
@@ -23,6 +29,7 @@ pub struct DNSMessage {
 }
 
 impl DNSMessage {
+    /// Returns a minimal DNS message
     pub fn new(identity: Option<Vec<u8>>,
                version: Option<Vec<u8>>,
                message_type: MessageType)
@@ -45,6 +52,7 @@ impl DNSMessage {
         }
     }
 
+    #[doc(hidden)]
     pub fn to_protobuf(self) -> dnstap_pb::Dnstap {
         let mut d = dnstap_pb::Dnstap::new();
         if let Some(identity) = self.identity {

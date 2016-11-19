@@ -5,6 +5,16 @@ use mio::*;
 use std::any::Any;
 use std::thread;
 
+/// DNSTapWriter is responsible for receiving DNS messages, connecting (and automatically
+/// reconnecting) to a UNIX socket, and asynchronously pushing the serialized data using
+/// frame stream protocol.
+///
+/// # Example
+/// ```
+/// let dnstap_writer =
+///     DNSTapWriter::build().backlog(4096).unix_socket_path("/tmp/dnstap.sock").start();
+/// dnstap_writer.join().unwrap();
+/// ```
 pub struct DNSTapWriter {
     dnstap_tx: channel::SyncSender<DNSMessage>,
     tid: thread::JoinHandle<()>,
@@ -15,6 +25,7 @@ impl DNSTapWriter {
         DNSTapBuilder::default()
     }
 
+    /// Spawns a new task handling writes to the socket
     pub fn start(builder: DNSTapBuilder) -> DNSTapWriter {
         let (dnstap_tx, dnstap_rx) = channel::sync_channel(builder.backlog);
         let mio_poll = Poll::new().unwrap();
@@ -64,21 +75,25 @@ impl DNSTapWriter {
         self.tid.join()
     }
 
+    /// Sends a DNS message
     #[inline]
     pub fn send(&self, dns_message: DNSMessage) -> Result<(), channel::TrySendError<DNSMessage>> {
         self.dnstap_tx.try_send(dns_message)
     }
 
+    /// Returns a cloneable `Sender` object that can used to send DNS messages
     #[inline]
     pub fn sender(&self) -> Sender {
         Sender(self.dnstap_tx.clone())
     }
 }
 
+/// Sender is a cloneable structure that to send DNS messages
 #[derive(Clone)]
 pub struct Sender(channel::SyncSender<DNSMessage>);
 
 impl Sender {
+    /// Sends a DNS message
     #[inline]
     pub fn send(&self, dns_message: DNSMessage) -> Result<(), channel::TrySendError<DNSMessage>> {
         self.0.try_send(dns_message)
