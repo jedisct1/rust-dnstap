@@ -36,21 +36,24 @@ impl DNSTapWriter {
         };
         context.connect();
         let mut events = Events::with_capacity(512);
-        let tid = thread::spawn(move || {
-            while context.mio_poll.poll(&mut events, None).is_ok() {
-                for event in events.iter() {
-                    match event.token() {
-                        UNIX_SOCKET_TOK => context.write_cb(event),
-                        NOTIFY_TOK => context.message_cb(),
-                        TIMER_TOK => context.connect(),
-                        _ => unreachable!(),
+        let tid = thread::Builder::new()
+            .name("dnstap".to_owned())
+            .spawn(move || {
+                while context.mio_poll.poll(&mut events, None).is_ok() {
+                    for event in events.iter() {
+                        match event.token() {
+                            UNIX_SOCKET_TOK => context.write_cb(event),
+                            NOTIFY_TOK => context.message_cb(),
+                            TIMER_TOK => context.connect(),
+                            _ => unreachable!(),
+                        }
                     }
                 }
-            }
-            if let Some(frame_stream) = context.frame_stream {
-                frame_stream.finish().unwrap();
-            }
-        });
+                if let Some(frame_stream) = context.frame_stream {
+                    frame_stream.finish().unwrap();
+                }
+            })
+            .unwrap();
         DNSTapWriter {
             dnstap_tx: dnstap_tx,
             tid: tid,
