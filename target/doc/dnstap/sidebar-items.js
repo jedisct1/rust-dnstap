@@ -1,0 +1,1 @@
+initSidebarItems({"enum":[["MessageType",""],["SocketFamily",""],["SocketProtocol",""]],"struct":[["AuthQuery",""],["AuthResponse",""],["ClientQuery",""],["ClientResponse",""],["DNSMessage",""],["DNSTapWriter",""],["ResolverQuery",""],["ResolverResponse",""],["Sender",""]]});
