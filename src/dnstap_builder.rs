@@ -5,7 +5,8 @@ use dnstap_writer::DNSTapPendingWriter;
 
 const DEFAULT_BACKLOG: usize = 4096;
 
-/// Builds a `DNSTapWriter` service.
+/// Builds a `DNSTapPendingWriter` object, to eventually start a
+/// `DNSTapWriter` service.
 #[derive(Clone, Hash)]
 pub struct DNSTapBuilder {
     pub backlog: usize,
