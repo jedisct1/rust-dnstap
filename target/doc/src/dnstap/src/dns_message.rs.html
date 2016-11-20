@@ -367,7 +367,7 @@
     }
 
     <span class='attribute'>#[<span class='ident'>doc</span>(<span class='ident'>hidden</span>)]</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>to_protobuf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>dnstap_pb</span>::<span class='ident'>Dnstap</span> {
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>into_protobuf</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>dnstap_pb</span>::<span class='ident'>Dnstap</span> {
         <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>d</span> <span class='op'>=</span> <span class='ident'>dnstap_pb</span>::<span class='ident'>Dnstap</span>::<span class='ident'>new</span>();
         <span class='kw'>if</span> <span class='kw'>let</span> <span class='prelude-val'>Some</span>(<span class='ident'>identity</span>) <span class='op'>=</span> <span class='self'>self</span>.<span class='ident'>identity</span> {
             <span class='ident'>d</span>.<span class='ident'>set_identity</span>(<span class='ident'>identity</span>);

@@ -93,7 +93,7 @@
 
 <span class='kw'>const</span> <span class='ident'>DEFAULT_BACKLOG</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>4096</span>;
 
-<span class='doccomment'>/// Builds a DNSTapWriter service.</span>
+<span class='doccomment'>/// Builds a `DNSTapWriter` service.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>, <span class='ident'>Hash</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>DNSTapBuilder</span> {
     <span class='kw'>pub</span> <span class='ident'>backlog</span>: <span class='ident'>usize</span>,
@@ -101,7 +101,7 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>DNSTapBuilder</span> {
-    <span class='doccomment'>/// Returns a DNSTapBuilder boilerplate</span>
+    <span class='doccomment'>/// Returns a `DNSTapBuilder` boilerplate</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='ident'>DNSTapBuilder</span> {
         <span class='ident'>DNSTapBuilder</span> {
             <span class='ident'>backlog</span>: <span class='ident'>DEFAULT_BACKLOG</span>,

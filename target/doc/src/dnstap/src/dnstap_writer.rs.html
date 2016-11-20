@@ -181,7 +181,7 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>DNSTapPendingWriter</span> {
-    <span class='doccomment'>/// Creates a DNSTapPendingWriter object. The communication channel is established at this</span>
+    <span class='doccomment'>/// Creates a `DNSTapPendingWriter` object. The communication channel is established at this</span>
     <span class='doccomment'>/// point, and the `sender()` function can be used in order to get `Sender` objects.</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>listen</span>(<span class='ident'>builder</span>: <span class='ident'>DNSTapBuilder</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DNSTapPendingWriter</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
         <span class='kw'>let</span> (<span class='ident'>dnstap_tx</span>, <span class='ident'>dnstap_rx</span>) <span class='op'>=</span> <span class='ident'>channel</span>::<span class='ident'>sync_channel</span>(<span class='ident'>builder</span>.<span class='ident'>backlog</span>);
@@ -220,7 +220,7 @@
     }
 }
 
-<span class='doccomment'>/// DNSTapWriter is responsible for receiving DNS messages, connecting (and automatically</span>
+<span class='doccomment'>/// `DNSTapWriter` is responsible for receiving DNS messages, connecting (and automatically</span>
 <span class='doccomment'>/// reconnecting) to a UNIX socket, and asynchronously pushing the serialized data using</span>
 <span class='doccomment'>/// frame stream protocol.</span>
 <span class='doccomment'>///</span>
@@ -280,7 +280,7 @@
     }
 }
 
-<span class='doccomment'>/// Sender is a cloneable structure to send DNS messages.</span>
+<span class='doccomment'>/// `Sender` is a cloneable structure to send DNS messages.</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Clone</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Sender</span>(<span class='ident'>channel</span>::<span class='ident'>SyncSender</span><span class='op'>&lt;</span><span class='ident'>DNSMessage</span><span class='op'>&gt;</span>);
 
