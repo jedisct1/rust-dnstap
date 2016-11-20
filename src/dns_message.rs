@@ -53,7 +53,7 @@ impl DNSMessage {
     }
 
     #[doc(hidden)]
-    pub fn to_protobuf(self) -> dnstap_pb::Dnstap {
+    pub fn into_protobuf(self) -> dnstap_pb::Dnstap {
         let mut d = dnstap_pb::Dnstap::new();
         if let Some(identity) = self.identity {
             d.set_identity(identity);

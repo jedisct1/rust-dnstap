@@ -5,7 +5,7 @@ use dnstap_writer::DNSTapPendingWriter;
 
 const DEFAULT_BACKLOG: usize = 4096;
 
-/// Builds a DNSTapWriter service.
+/// Builds a `DNSTapWriter` service.
 #[derive(Clone, Hash)]
 pub struct DNSTapBuilder {
     pub backlog: usize,
@@ -13,7 +13,7 @@ pub struct DNSTapBuilder {
 }
 
 impl DNSTapBuilder {
-    /// Returns a DNSTapBuilder boilerplate
+    /// Returns a `DNSTapBuilder` boilerplate
     pub fn default() -> DNSTapBuilder {
         DNSTapBuilder {
             backlog: DEFAULT_BACKLOG,

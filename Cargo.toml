@@ -10,9 +10,10 @@ homepage = "https://github.com/jedisct1/rust-dnstap"
 repository = "https://github.com/jedisct1/rust-dnstap"
 
 [dependencies]
+clippy = {version = "*", optional = true}
 framestream = { git="https://github.com/jedisct1/rust-framestream.git" }
-protobuf = "*"
 mio = { git="https://github.com/carllerche/mio.git" }
+protobuf = "*"
 
 [profile.release]
 lto = true

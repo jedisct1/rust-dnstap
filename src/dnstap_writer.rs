@@ -12,7 +12,7 @@ pub struct DNSTapPendingWriter {
 }
 
 impl DNSTapPendingWriter {
-    /// Creates a DNSTapPendingWriter object. The communication channel is established at this
+    /// Creates a `DNSTapPendingWriter` object. The communication channel is established at this
     /// point, and the `sender()` function can be used in order to get `Sender` objects.
     pub fn listen(builder: DNSTapBuilder) -> Result<DNSTapPendingWriter, &'static str> {
         let (dnstap_tx, dnstap_rx) = channel::sync_channel(builder.backlog);
@@ -51,7 +51,7 @@ impl DNSTapPendingWriter {
     }
 }
 
-/// DNSTapWriter is responsible for receiving DNS messages, connecting (and automatically
+/// `DNSTapWriter` is responsible for receiving DNS messages, connecting (and automatically
 /// reconnecting) to a UNIX socket, and asynchronously pushing the serialized data using
 /// frame stream protocol.
 ///
@@ -111,7 +111,7 @@ impl DNSTapWriter {
     }
 }
 
-/// Sender is a cloneable structure to send DNS messages.
+/// `Sender` is a cloneable structure to send DNS messages.
 #[derive(Clone)]
 pub struct Sender(channel::SyncSender<DNSMessage>);
 

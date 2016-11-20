@@ -4,6 +4,9 @@
 //! This crate implements the sender part of the [dnstap](http://dnstap.info/) protocol,
 //! a flexible, structured binary log format for DNS software.
 
+#![cfg_attr(feature="clippy", feature(plugin))]
+#![cfg_attr(feature="clippy", plugin(clippy))]
+
 extern crate framestream;
 extern crate mio;
 extern crate protobuf;

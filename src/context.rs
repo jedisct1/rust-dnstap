@@ -52,7 +52,7 @@ impl Context {
         }
         let frame_stream = self.frame_stream.as_mut().unwrap();
         while let Ok(dns_message) = self.dnstap_rx.try_recv() {
-            let dns_message_bytes = dns_message.to_protobuf().write_to_bytes().unwrap();
+            let dns_message_bytes = dns_message.into_protobuf().write_to_bytes().unwrap();
             match frame_stream.write_all(&dns_message_bytes).or_else(|_| {
                 let _ = frame_stream.flush();
                 frame_stream.write_all(&dns_message_bytes)
