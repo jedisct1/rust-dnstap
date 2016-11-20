@@ -83,11 +83,13 @@
 <span id="39">39</span>
 <span id="40">40</span>
 <span id="41">41</span>
+<span id="42">42</span>
+<span id="43">43</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>path</span>::{<span class='ident'>Path</span>, <span class='ident'>PathBuf</span>};
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>usize</span>;
 
-<span class='kw'>use</span> <span class='ident'>dnstap_writer</span>::<span class='ident'>DNSTapWriter</span>;
+<span class='kw'>use</span> <span class='ident'>dnstap_writer</span>::<span class='ident'>DNSTapPendingWriter</span>;
 
 <span class='kw'>const</span> <span class='ident'>DEFAULT_BACKLOG</span>: <span class='ident'>usize</span> <span class='op'>=</span> <span class='number'>4096</span>;
 
@@ -99,6 +101,7 @@
 }
 
 <span class='kw'>impl</span> <span class='ident'>DNSTapBuilder</span> {
+    <span class='doccomment'>/// Returns a DNSTapBuilder boilerplate</span>
     <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>default</span>() <span class='op'>-&gt;</span> <span class='ident'>DNSTapBuilder</span> {
         <span class='ident'>DNSTapBuilder</span> {
             <span class='ident'>backlog</span>: <span class='ident'>DEFAULT_BACKLOG</span>,
@@ -120,9 +123,10 @@
         <span class='self'>self</span>
     }
 
-    <span class='doccomment'>/// Spawns a new task to start the service.</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>start</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='ident'>DNSTapWriter</span> {
-        <span class='ident'>DNSTapWriter</span>::<span class='ident'>start</span>(<span class='self'>self</span>)
+    <span class='doccomment'>/// Creates a DNSTapPendingWriter object. The communication channel is established at this</span>
+    <span class='doccomment'>/// point, and the `sender()` function can be used in order to get `Sender` objects.</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>listen</span>(<span class='self'>self</span>) <span class='op'>-&gt;</span> <span class='prelude-ty'>Result</span><span class='op'>&lt;</span><span class='ident'>DNSTapPendingWriter</span>, <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span><span class='op'>&gt;</span> {
+        <span class='ident'>DNSTapPendingWriter</span>::<span class='ident'>listen</span>(<span class='self'>self</span>)
     }
 }
 </pre>

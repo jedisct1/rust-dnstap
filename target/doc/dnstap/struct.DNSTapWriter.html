@@ -47,27 +47,26 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a id='src-558' class='srclink' href='../src/dnstap/src/dnstap_writer.rs.html#21-24' title='goto source code'>[src]</a></span></h1>
+               </span><a id='src-574' class='srclink' href='../src/dnstap/src/dnstap_writer.rs.html#69-72' title='goto source code'>[src]</a></span></h1>
 <pre class='rust struct'>pub struct DNSTapWriter { /* fields omitted */ }</pre><div class='docblock'><p>DNSTapWriter is responsible for receiving DNS messages, connecting (and automatically
 reconnecting) to a UNIX socket, and asynchronously pushing the serialized data using
 frame stream protocol.</p>
 
 <h1 id='example' class='section-header'><a href='#example'>Example</a></h1>
 <pre class='rust rust-example-rendered'>
-<span class='kw'>let</span> <span class='ident'>dnstap_writer</span> <span class='op'>=</span> <span class='ident'>DNSTapWriter</span>::<span class='ident'>build</span>()
+<span class='kw'>let</span> <span class='ident'>dnstap_pending_writer</span> <span class='op'>=</span> <span class='ident'>DNSTapBuilder</span>::<span class='ident'>default</span>()
     .<span class='ident'>backlog</span>(<span class='number'>4096</span>)
     .<span class='ident'>unix_socket_path</span>(<span class='string'>&quot;/tmp/dnstap.sock&quot;</span>)
-    .<span class='ident'>start</span>();
+    .<span class='ident'>listen</span>().<span class='ident'>unwrap</span>();
+
+<span class='kw'>let</span> <span class='ident'>dnstap_writer</span> <span class='op'>=</span> <span class='ident'>dnstap_pending_writer</span>.<span class='ident'>start</span>();
 
 <span class='ident'>dnstap_writer</span>.<span class='ident'>join</span>().<span class='ident'>unwrap</span>();</pre>
-</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../dnstap/struct.DNSTapWriter.html' title='dnstap::DNSTapWriter'>DNSTapWriter</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-561' class='srclink' href='../src/dnstap/src/dnstap_writer.rs.html#26-92' title='goto source code'>[src]</a></span></h3>
-<div class='impl-items'><h4 id='method.build' class='method'><span id='build.v' class='invisible'><code>fn <a href='#method.build' class='fnname'>build</a>() -&gt; <a class='struct' href='../dnstap/struct.DNSTapBuilder.html' title='dnstap::DNSTapBuilder'>DNSTapBuilder</a></code></span></h4>
-<h4 id='method.start' class='method'><span id='start.v' class='invisible'><code>fn <a href='#method.start' class='fnname'>start</a>(builder: <a class='struct' href='../dnstap/struct.DNSTapBuilder.html' title='dnstap::DNSTapBuilder'>DNSTapBuilder</a>) -&gt; <a class='struct' href='../dnstap/struct.DNSTapWriter.html' title='dnstap::DNSTapWriter'>DNSTapWriter</a></code></span></h4>
+</div><h2 id='methods'>Methods</h2><h3 class='impl'><span class='in-band'><code>impl <a class='struct' href='../dnstap/struct.DNSTapWriter.html' title='dnstap::DNSTapWriter'>DNSTapWriter</a></code></span><span class='out-of-band'><div class='ghost'></div><a id='src-577' class='srclink' href='../src/dnstap/src/dnstap_writer.rs.html#74-112' title='goto source code'>[src]</a></span></h3>
+<div class='impl-items'><h4 id='method.start' class='method'><span id='start.v' class='invisible'><code>fn <a href='#method.start' class='fnname'>start</a>(dnstap_pending_writer: <a class='struct' href='../dnstap/struct.DNSTapPendingWriter.html' title='dnstap::DNSTapPendingWriter'>DNSTapPendingWriter</a>) -&gt; <a class='type' href='https://doc.rust-lang.org/nightly/std/io/error/type.Result.html' title='std::io::error::Result'>Result</a>&lt;<a class='struct' href='../dnstap/struct.DNSTapWriter.html' title='dnstap::DNSTapWriter'>DNSTapWriter</a>&gt;</code></span></h4>
 <div class='docblock'><p>Spawns a new task handling writes to the socket.</p>
 </div><h4 id='method.join' class='method'><span id='join.v' class='invisible'><code>fn <a href='#method.join' class='fnname'>join</a>(self) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='struct' href='https://doc.rust-lang.org/nightly/alloc/boxed/struct.Box.html' title='alloc::boxed::Box'>Box</a>&lt;<a class='trait' href='https://doc.rust-lang.org/nightly/core/any/trait.Any.html' title='core::any::Any'>Any</a> + <a class='trait' href='https://doc.rust-lang.org/nightly/core/marker/trait.Send.html' title='core::marker::Send'>Send</a> + 'static&gt;&gt;</code></span></h4>
-<h4 id='method.send' class='method'><span id='send.v' class='invisible'><code>fn <a href='#method.send' class='fnname'>send</a>(&amp;self, dns_message: <a class='struct' href='../dnstap/struct.DNSMessage.html' title='dnstap::DNSMessage'>DNSMessage</a>) -&gt; <a class='enum' href='https://doc.rust-lang.org/nightly/core/result/enum.Result.html' title='core::result::Result'>Result</a>&lt;<a class='primitive' href='https://doc.rust-lang.org/nightly/std/primitive.tuple.html'>()</a>, <a class='enum' href='../mio/channel/enum.TrySendError.html' title='mio::channel::TrySendError'>TrySendError</a>&lt;<a class='struct' href='../dnstap/struct.DNSMessage.html' title='dnstap::DNSMessage'>DNSMessage</a>&gt;&gt;</code></span></h4>
-<div class='docblock'><p>Sends a DNS message.</p>
-</div><h4 id='method.sender' class='method'><span id='sender.v' class='invisible'><code>fn <a href='#method.sender' class='fnname'>sender</a>(&amp;self) -&gt; <a class='struct' href='../dnstap/struct.Sender.html' title='dnstap::Sender'>Sender</a></code></span></h4>
+<h4 id='method.sender' class='method'><span id='sender.v' class='invisible'><code>fn <a href='#method.sender' class='fnname'>sender</a>(&amp;self) -&gt; <a class='struct' href='../dnstap/struct.Sender.html' title='dnstap::Sender'>Sender</a></code></span></h4>
 <div class='docblock'><p>Returns a cloneable <code>Sender</code> object that can used to send DNS messages.</p>
 </div></div></section>
     <section id='search' class="content hidden"></section>

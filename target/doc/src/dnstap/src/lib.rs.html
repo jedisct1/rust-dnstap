@@ -67,7 +67,7 @@
 <span id="23">23</span>
 </pre><pre class='rust '>
 
-<span class='doccomment'>//! An implementation of the dnstap protocol.</span>
+<span class='doccomment'>//! An implementation of the dnstap protocol</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! This crate implements the sender part of the [dnstap](http://dnstap.info/) protocol,</span>
 <span class='doccomment'>//! a flexible, structured binary log format for DNS software.</span>
@@ -88,7 +88,7 @@
 
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>dns_message</span>::<span class='op'>*</span>;
 <span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>dnstap_builder</span>::<span class='op'>*</span>;
-<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>dnstap_writer</span>::{<span class='ident'>DNSTapWriter</span>, <span class='ident'>Sender</span>};
+<span class='kw'>pub</span> <span class='kw'>use</span> <span class='ident'>dnstap_writer</span>::{<span class='ident'>DNSTapPendingWriter</span>, <span class='ident'>DNSTapWriter</span>, <span class='ident'>Sender</span>};
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
