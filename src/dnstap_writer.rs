@@ -62,7 +62,7 @@ impl DNSTapPendingWriter {
 ///     .unix_socket_path("/tmp/dnstap.sock")
 ///     .listen().unwrap();
 ///
-/// let dnstap_writer = dnstap_pending_writer.start();
+/// let dnstap_writer = dnstap_pending_writer.start().unwrap();
 ///
 /// dnstap_writer.join().unwrap();
 /// ```
