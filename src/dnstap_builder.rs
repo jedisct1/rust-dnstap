@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 use std::usize;
 
-use dnstap_writer::DNSTapWriter;
+use dnstap_writer::DNSTapPendingWriter;
 
 const DEFAULT_BACKLOG: usize = 4096;
 
@@ -13,6 +13,7 @@ pub struct DNSTapBuilder {
 }
 
 impl DNSTapBuilder {
+    /// Returns a DNSTapBuilder boilerplate
     pub fn default() -> DNSTapBuilder {
         DNSTapBuilder {
             backlog: DEFAULT_BACKLOG,
@@ -34,8 +35,9 @@ impl DNSTapBuilder {
         self
     }
 
-    /// Spawns a new task to start the service.
-    pub fn start(self) -> DNSTapWriter {
-        DNSTapWriter::start(self)
+    /// Creates a DNSTapPendingWriter object. The communication channel is established at this
+    /// point, and the `sender()` function can be used in order to get `Sender` objects.
+    pub fn listen(self) -> Result<DNSTapPendingWriter, &'static str> {
+        DNSTapPendingWriter::listen(self)
     }
 }

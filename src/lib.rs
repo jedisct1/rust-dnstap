@@ -20,4 +20,4 @@ pub use dnstap_pb::SocketProtocol;
 
 pub use dns_message::*;
 pub use dnstap_builder::*;
-pub use dnstap_writer::{DNSTapWriter, Sender};
+pub use dnstap_writer::{DNSTapPendingWriter, DNSTapWriter, Sender};

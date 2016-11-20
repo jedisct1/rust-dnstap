@@ -3,33 +3,18 @@ use dns_message::*;
 use dnstap_builder::*;
 use mio::*;
 use std::any::Any;
+use std::io;
 use std::thread;
 
-/// DNSTapWriter is responsible for receiving DNS messages, connecting (and automatically
-/// reconnecting) to a UNIX socket, and asynchronously pushing the serialized data using
-/// frame stream protocol.
-///
-/// # Example
-/// ```
-/// let dnstap_writer = DNSTapWriter::build()
-///     .backlog(4096)
-///     .unix_socket_path("/tmp/dnstap.sock")
-///     .start();
-///
-/// dnstap_writer.join().unwrap();
-/// ```
-pub struct DNSTapWriter {
+pub struct DNSTapPendingWriter {
     dnstap_tx: channel::SyncSender<DNSMessage>,
-    tid: thread::JoinHandle<()>,
+    context: Context,
 }
 
-impl DNSTapWriter {
-    pub fn build() -> DNSTapBuilder {
-        DNSTapBuilder::default()
-    }
-
-    /// Spawns a new task handling writes to the socket.
-    pub fn start(builder: DNSTapBuilder) -> DNSTapWriter {
+impl DNSTapPendingWriter {
+    /// Creates a DNSTapPendingWriter object. The communication channel is established at this
+    /// point, and the `sender()` function can be used in order to get `Sender` objects.
+    pub fn listen(builder: DNSTapBuilder) -> Result<DNSTapPendingWriter, &'static str> {
         let (dnstap_tx, dnstap_rx) = channel::sync_channel(builder.backlog);
         let mio_poll = Poll::new().unwrap();
         mio_poll.register(&dnstap_rx,
@@ -40,7 +25,7 @@ impl DNSTapWriter {
         let mio_timers = timer::Timer::default();
         mio_poll.register(&mio_timers, TIMER_TOK, Ready::readable(), PollOpt::edge()).unwrap();
         assert!(builder.unix_socket_path.is_some());
-        let mut context = Context {
+        let context = Context {
             mio_poll: mio_poll,
             mio_timers: mio_timers,
             dnstap_rx: dnstap_rx,
@@ -48,30 +33,71 @@ impl DNSTapWriter {
             unix_stream: None,
             frame_stream: None,
         };
-        context.connect();
+        Ok(DNSTapPendingWriter {
+            dnstap_tx: dnstap_tx,
+            context: context,
+        })
+    }
+
+    /// Spawns a new task handling writes to the socket.
+    pub fn start(self) -> io::Result<DNSTapWriter> {
+        DNSTapWriter::start(self)
+    }
+
+    /// Returns a cloneable `Sender` object that can used to send DNS messages.
+    #[inline]
+    pub fn sender(&self) -> Sender {
+        Sender(self.dnstap_tx.clone())
+    }
+}
+
+/// DNSTapWriter is responsible for receiving DNS messages, connecting (and automatically
+/// reconnecting) to a UNIX socket, and asynchronously pushing the serialized data using
+/// frame stream protocol.
+///
+/// # Example
+/// ```
+/// let dnstap_pending_writer = DNSTapBuilder::default()
+///     .backlog(4096)
+///     .unix_socket_path("/tmp/dnstap.sock")
+///     .listen().unwrap();
+///
+/// let dnstap_writer = dnstap_pending_writer.start();
+///
+/// dnstap_writer.join().unwrap();
+/// ```
+pub struct DNSTapWriter {
+    dnstap_tx: channel::SyncSender<DNSMessage>,
+    tid: thread::JoinHandle<()>,
+}
+
+impl DNSTapWriter {
+    /// Spawns a new task handling writes to the socket.
+    pub fn start(mut dnstap_pending_writer: DNSTapPendingWriter) -> io::Result<DNSTapWriter> {
+        dnstap_pending_writer.context.connect();
         let mut events = Events::with_capacity(512);
-        let tid = thread::Builder::new()
+        let dnstap_tx = dnstap_pending_writer.dnstap_tx.clone();
+        let tid = try!(thread::Builder::new()
             .name("dnstap".to_owned())
             .spawn(move || {
-                while context.mio_poll.poll(&mut events, None).is_ok() {
+                while dnstap_pending_writer.context.mio_poll.poll(&mut events, None).is_ok() {
                     for event in events.iter() {
                         match event.token() {
-                            UNIX_SOCKET_TOK => context.write_cb(event),
-                            NOTIFY_TOK => context.message_cb(),
-                            TIMER_TOK => context.connect(),
+                            UNIX_SOCKET_TOK => dnstap_pending_writer.context.write_cb(event),
+                            NOTIFY_TOK => dnstap_pending_writer.context.message_cb(),
+                            TIMER_TOK => dnstap_pending_writer.context.connect(),
                             _ => unreachable!(),
                         }
                     }
                 }
-                if let Some(frame_stream) = context.frame_stream {
+                if let Some(frame_stream) = dnstap_pending_writer.context.frame_stream {
                     frame_stream.finish().unwrap();
                 }
-            })
-            .unwrap();
-        DNSTapWriter {
+            }));
+        Ok(DNSTapWriter {
             dnstap_tx: dnstap_tx,
             tid: tid,
-        }
+        })
     }
 
     pub fn join(self) -> Result<(), Box<Any + Send + 'static>> {
