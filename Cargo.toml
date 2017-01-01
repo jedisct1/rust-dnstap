@@ -1,6 +1,6 @@
 [package]
 name = "dnstap"
-version = "0.1.0"
+version = "0.1.1"
 description = "An implementation of the dnstap protocol"
 authors = ["Frank Denis <github@pureftpd.org>"]
 keywords = ["dns"]
