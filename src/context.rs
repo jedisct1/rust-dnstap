@@ -2,6 +2,7 @@ use dns_message::*;
 use framestream::EncoderWriter;
 use mio::*;
 use mio::deprecated::{UnixSocket, UnixStream};
+use mio::timer::Timeout;
 use protobuf::*;
 use std::io::{self, BufWriter, Write};
 use std::path::PathBuf;
@@ -19,6 +20,7 @@ pub const UNIX_SOCKET_TOK: Token = Token(usize::MAX - 3);
 pub struct Context {
     pub mio_poll: Poll,
     pub mio_timers: timer::Timer<Token>,
+    pub retry_timeout: Option<Timeout>,
     pub dnstap_rx: channel::Receiver<DNSMessage>,
     pub unix_socket_path: Option<PathBuf>,
     pub unix_stream: Option<UnixStream>,
@@ -45,9 +47,10 @@ impl Context {
         if event.kind().is_hup() || event.kind().is_error() {
             self.unix_stream = None;
             self.frame_stream = None;
-            self.mio_timers
+            self.retry_timeout.take().and_then(|timeout| self.mio_timers.cancel_timeout(&timeout));
+            self.retry_timeout = Some(self.mio_timers
                 .set_timeout(time::Duration::from_secs(RETRY_DELAY_SECS), TIMER_TOK)
-                .unwrap();
+                .unwrap());
             return;
         }
         let frame_stream = self.frame_stream.as_mut().unwrap();
@@ -93,9 +96,12 @@ impl Context {
         let unix_stream = match unix_socket.connect(&self.unix_socket_path.clone().unwrap()) {
             Ok((unix_stream, _connected)) => unix_stream,
             Err(_) => {
-                self.mio_timers
+                self.retry_timeout
+                    .take()
+                    .and_then(|timeout| self.mio_timers.cancel_timeout(&timeout));
+                self.retry_timeout = Some(self.mio_timers
                     .set_timeout(time::Duration::from_secs(RETRY_DELAY_SECS), TIMER_TOK)
-                    .unwrap();
+                    .unwrap());
                 return;
             }
         };

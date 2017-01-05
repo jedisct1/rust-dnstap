@@ -28,6 +28,7 @@ impl DNSTapPendingWriter {
         let context = Context {
             mio_poll: mio_poll,
             mio_timers: mio_timers,
+            retry_timeout: None,
             dnstap_rx: dnstap_rx,
             unix_socket_path: builder.unix_socket_path,
             unix_stream: None,
