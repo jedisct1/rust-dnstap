@@ -1,6 +1,6 @@
 [package]
 name = "dnstap"
-version = "0.1.2"
+version = "0.1.3"
 description = "An implementation of the dnstap protocol"
 authors = ["Frank Denis <github@pureftpd.org>"]
 keywords = ["dns"]
@@ -8,11 +8,15 @@ readme = "README.md"
 license = "ISC"
 homepage = "https://github.com/jedisct1/rust-dnstap"
 repository = "https://github.com/jedisct1/rust-dnstap"
+categories = ["encoding", "network-programming", "value-formatting"]
+
+[badges]
+travis-ci = { repository = "jedisct1/rust-dnstap" }
 
 [dependencies]
 clippy = {version = "*", optional = true}
 framestream = { git="https://github.com/jedisct1/rust-framestream.git" }
-mio = { git="https://github.com/carllerche/mio.git" }
+mio = "*"
 protobuf = "*"
 
 [profile.release]
