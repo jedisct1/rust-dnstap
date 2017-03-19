@@ -48,9 +48,10 @@ impl Context {
             self.unix_stream = None;
             self.frame_stream = None;
             self.retry_timeout.take().and_then(|timeout| self.mio_timers.cancel_timeout(&timeout));
-            self.retry_timeout = Some(self.mio_timers
-                .set_timeout(time::Duration::from_secs(RETRY_DELAY_SECS), TIMER_TOK)
-                .unwrap());
+            self.retry_timeout =
+                Some(self.mio_timers
+                         .set_timeout(time::Duration::from_secs(RETRY_DELAY_SECS), TIMER_TOK)
+                         .unwrap());
             return;
         }
         let frame_stream = self.frame_stream.as_mut().unwrap();
@@ -96,12 +97,14 @@ impl Context {
         let unix_stream = match unix_socket.connect(&self.unix_socket_path.clone().unwrap()) {
             Ok((unix_stream, _connected)) => unix_stream,
             Err(_) => {
-                self.retry_timeout
-                    .take()
-                    .and_then(|timeout| self.mio_timers.cancel_timeout(&timeout));
-                self.retry_timeout = Some(self.mio_timers
-                    .set_timeout(time::Duration::from_secs(RETRY_DELAY_SECS), TIMER_TOK)
-                    .unwrap());
+                self.retry_timeout.take().and_then(|timeout| {
+                                                       self.mio_timers.cancel_timeout(&timeout)
+                                                   });
+                self.retry_timeout =
+                    Some(self.mio_timers
+                             .set_timeout(time::Duration::from_secs(RETRY_DELAY_SECS),
+                                          TIMER_TOK)
+                             .unwrap());
                 return;
             }
         };

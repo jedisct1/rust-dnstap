@@ -18,9 +18,9 @@ impl DNSTapPendingWriter {
         let (dnstap_tx, dnstap_rx) = channel::sync_channel(builder.backlog);
         let mio_poll = Poll::new().unwrap();
         mio_poll.register(&dnstap_rx,
-                      NOTIFY_TOK,
-                      Ready::readable(),
-                      PollOpt::edge() | PollOpt::oneshot())
+                          NOTIFY_TOK,
+                          Ready::readable(),
+                          PollOpt::edge() | PollOpt::oneshot())
             .unwrap();
         let mio_timers = timer::Timer::default();
         mio_poll.register(&mio_timers, TIMER_TOK, Ready::readable(), PollOpt::edge()).unwrap();
@@ -35,9 +35,9 @@ impl DNSTapPendingWriter {
             frame_stream: None,
         };
         Ok(DNSTapPendingWriter {
-            dnstap_tx: dnstap_tx,
-            context: context,
-        })
+               dnstap_tx: dnstap_tx,
+               context: context,
+           })
     }
 
     /// Spawns a new task handling writes to the socket.
@@ -78,27 +78,28 @@ impl DNSTapWriter {
         dnstap_pending_writer.context.connect();
         let mut events = Events::with_capacity(512);
         let dnstap_tx = dnstap_pending_writer.dnstap_tx.clone();
-        let tid = try!(thread::Builder::new()
-            .name("dnstap".to_owned())
-            .spawn(move || {
-                while dnstap_pending_writer.context.mio_poll.poll(&mut events, None).is_ok() {
-                    for event in events.iter() {
-                        match event.token() {
-                            UNIX_SOCKET_TOK => dnstap_pending_writer.context.write_cb(event),
-                            NOTIFY_TOK => dnstap_pending_writer.context.message_cb(),
-                            TIMER_TOK => dnstap_pending_writer.context.connect(),
-                            _ => unreachable!(),
-                        }
+        let tid = try!(thread::Builder::new().name("dnstap".to_owned()).spawn(move || {
+            while dnstap_pending_writer.context
+                      .mio_poll
+                      .poll(&mut events, None)
+                      .is_ok() {
+                for event in events.iter() {
+                    match event.token() {
+                        UNIX_SOCKET_TOK => dnstap_pending_writer.context.write_cb(event),
+                        NOTIFY_TOK => dnstap_pending_writer.context.message_cb(),
+                        TIMER_TOK => dnstap_pending_writer.context.connect(),
+                        _ => unreachable!(),
                     }
                 }
-                if let Some(frame_stream) = dnstap_pending_writer.context.frame_stream {
-                    frame_stream.finish().unwrap();
-                }
-            }));
+            }
+            if let Some(frame_stream) = dnstap_pending_writer.context.frame_stream {
+                frame_stream.finish().unwrap();
+            }
+        }));
         Ok(DNSTapWriter {
-            dnstap_tx: dnstap_tx,
-            tid: tid,
-        })
+               dnstap_tx: dnstap_tx,
+               tid: tid,
+           })
     }
 
     pub fn join(self) -> Result<(), Box<Any + Send + 'static>> {

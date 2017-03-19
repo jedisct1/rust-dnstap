@@ -1,8 +1,8 @@
 use std::net::IpAddr;
 use std::time;
 
-use ::{MessageType, SocketFamily, SocketProtocol};
-use ::dnstap_pb;
+use {MessageType, SocketFamily, SocketProtocol};
+use dnstap_pb;
 
 /// A DNS message.
 ///
