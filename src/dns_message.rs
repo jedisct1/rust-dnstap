@@ -30,10 +30,11 @@ pub struct DNSMessage {
 
 impl DNSMessage {
     /// Returns a minimal DNS message
-    pub fn new(identity: Option<Vec<u8>>,
-               version: Option<Vec<u8>>,
-               message_type: MessageType)
-               -> DNSMessage {
+    pub fn new(
+        identity: Option<Vec<u8>>,
+        version: Option<Vec<u8>>,
+        message_type: MessageType,
+    ) -> DNSMessage {
         DNSMessage {
             identity: identity,
             version: version,

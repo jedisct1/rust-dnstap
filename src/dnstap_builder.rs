@@ -30,7 +30,8 @@ impl DNSTapBuilder {
 
     /// Path to the UNIX socket to send dnstap data to.
     pub fn unix_socket_path<P>(mut self, path: P) -> Self
-        where P: AsRef<Path>
+    where
+        P: AsRef<Path>,
     {
         self.unix_socket_path = Some(PathBuf::from(path.as_ref()));
         self
