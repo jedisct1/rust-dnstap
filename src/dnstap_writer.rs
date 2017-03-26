@@ -57,7 +57,9 @@ impl DNSTapPendingWriter {
 /// frame stream protocol.
 ///
 /// # Example
-/// ```
+/// ```no_run
+/// use dnstap::DNSTapBuilder;
+///
 /// let dnstap_pending_writer = DNSTapBuilder::default()
 ///     .backlog(4096)
 ///     .unix_socket_path("/tmp/dnstap.sock")
