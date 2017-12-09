@@ -80,14 +80,18 @@ impl DNSMessage {
         socket_family = match self.response_address {
             Some(IpAddr::V4(ip4)) => {
                 msg.set_response_address(ip4.octets().to_vec());
-                debug_assert_eq!(socket_family.unwrap_or(SocketFamily::INET),
-                                 SocketFamily::INET);
+                debug_assert_eq!(
+                    socket_family.unwrap_or(SocketFamily::INET),
+                    SocketFamily::INET
+                );
                 Some(SocketFamily::INET)
             }
             Some(IpAddr::V6(ip6)) => {
                 msg.set_response_address(ip6.octets().to_vec());
-                debug_assert_eq!(socket_family.unwrap_or(SocketFamily::INET6),
-                                 SocketFamily::INET6);
+                debug_assert_eq!(
+                    socket_family.unwrap_or(SocketFamily::INET6),
+                    SocketFamily::INET6
+                );
                 Some(SocketFamily::INET6)
             }
             None => socket_family,
