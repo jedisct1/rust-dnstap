@@ -9,8 +9,8 @@ use std::path::PathBuf;
 use std::time;
 use std::usize;
 
-pub const BUFFER_SIZE: usize = 262144;
-pub const CONTENT_TYPE: &'static str = "protobuf:dnstap.Dnstap";
+pub const BUFFER_SIZE: usize = 262_144;
+pub const CONTENT_TYPE: &str = "protobuf:dnstap.Dnstap";
 pub const RETRY_DELAY_SECS: u64 = 1;
 
 pub const NOTIFY_TOK: Token = Token(usize::MAX - 1);

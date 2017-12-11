@@ -103,10 +103,10 @@ impl DNSMessage {
             msg.set_socket_protocol(socket_protocol);
         }
         if let Some(query_port) = self.query_port {
-            msg.set_query_port(query_port as u32);
+            msg.set_query_port(u32::from(query_port));
         }
         if let Some(response_port) = self.response_port {
-            msg.set_response_port(response_port as u32);
+            msg.set_response_port(u32::from(response_port));
         }
         if let Some(query_packet) = self.query_packet {
             msg.set_query_message(query_packet);
