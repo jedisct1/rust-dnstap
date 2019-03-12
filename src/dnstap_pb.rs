@@ -230,31 +230,31 @@ impl ::protobuf::Message for Dnstap {
         true
     }
 
-    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::ProtobufResult<()> {
+        while !r#try!(is.eof()) {
+            let (field_number, wire_type) = r#try!(is.read_tag_unpack());
             match field_number {
                 1 => {
-                    try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.identity));
+                    r#try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.identity));
                 },
                 2 => {
-                    try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.version));
+                    r#try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.version));
                 },
                 3 => {
-                    try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.extra));
+                    r#try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.extra));
                 },
                 15 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = r#try!(is.read_enum());
                     self.field_type = ::std::option::Option::Some(tmp);
                 },
                 14 => {
-                    try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.message));
+                    r#try!(::protobuf::rt::read_singular_message_into(wire_type, is, &mut self.message));
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    r#try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
                 },
             };
         }
@@ -286,25 +286,25 @@ impl ::protobuf::Message for Dnstap {
         my_size
     }
 
-    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.identity.as_ref() {
-            try!(os.write_bytes(1, &v));
+            r#try!(os.write_bytes(1, &v));
         };
         if let Some(v) = self.version.as_ref() {
-            try!(os.write_bytes(2, &v));
+            r#try!(os.write_bytes(2, &v));
         };
         if let Some(v) = self.extra.as_ref() {
-            try!(os.write_bytes(3, &v));
+            r#try!(os.write_bytes(3, &v));
         };
         if let Some(v) = self.field_type {
-            try!(os.write_enum(15, v.value()));
+            r#try!(os.write_enum(15, v.value()));
         };
         if let Some(v) = self.message.as_ref() {
-            try!(os.write_tag(14, ::protobuf::wire_format::WireTypeLengthDelimited));
-            try!(os.write_raw_varint32(v.get_cached_size()));
-            try!(v.write_to_with_cached_sizes(os));
+            r#try!(os.write_tag(14, ::protobuf::wire_format::WireTypeLengthDelimited));
+            r#try!(os.write_raw_varint32(v.get_cached_size()));
+            r#try!(v.write_to_with_cached_sizes(os));
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        r#try!(os.write_unknown_fields(self.get_unknown_fields()));
         ::std::result::Result::Ok(())
     }
 
@@ -324,8 +324,8 @@ impl ::protobuf::Message for Dnstap {
         ::std::any::TypeId::of::<Dnstap>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -404,7 +404,7 @@ impl ::std::cmp::PartialEq for Dnstap {
 }
 
 impl ::std::fmt::Debug for Dnstap {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }
@@ -868,90 +868,90 @@ impl ::protobuf::Message for Message {
         true
     }
 
-    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream) -> ::protobuf::ProtobufResult<()> {
-        while !try!(is.eof()) {
-            let (field_number, wire_type) = try!(is.read_tag_unpack());
+    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::ProtobufResult<()> {
+        while !r#try!(is.eof()) {
+            let (field_number, wire_type) = r#try!(is.read_tag_unpack());
             match field_number {
                 1 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = r#try!(is.read_enum());
                     self.field_type = ::std::option::Option::Some(tmp);
                 },
                 2 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = r#try!(is.read_enum());
                     self.socket_family = ::std::option::Option::Some(tmp);
                 },
                 3 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_enum());
+                    let tmp = r#try!(is.read_enum());
                     self.socket_protocol = ::std::option::Option::Some(tmp);
                 },
                 4 => {
-                    try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.query_address));
+                    r#try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.query_address));
                 },
                 5 => {
-                    try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.response_address));
+                    r#try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.response_address));
                 },
                 6 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_uint32());
+                    let tmp = r#try!(is.read_uint32());
                     self.query_port = ::std::option::Option::Some(tmp);
                 },
                 7 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_uint32());
+                    let tmp = r#try!(is.read_uint32());
                     self.response_port = ::std::option::Option::Some(tmp);
                 },
                 8 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_uint64());
+                    let tmp = r#try!(is.read_uint64());
                     self.query_time_sec = ::std::option::Option::Some(tmp);
                 },
                 9 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_fixed32());
+                    let tmp = r#try!(is.read_fixed32());
                     self.query_time_nsec = ::std::option::Option::Some(tmp);
                 },
                 10 => {
-                    try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.query_message));
+                    r#try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.query_message));
                 },
                 11 => {
-                    try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.query_zone));
+                    r#try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.query_zone));
                 },
                 12 => {
                     if wire_type != ::protobuf::wire_format::WireTypeVarint {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_uint64());
+                    let tmp = r#try!(is.read_uint64());
                     self.response_time_sec = ::std::option::Option::Some(tmp);
                 },
                 13 => {
                     if wire_type != ::protobuf::wire_format::WireTypeFixed32 {
                         return ::std::result::Result::Err(::protobuf::rt::unexpected_wire_type(wire_type));
                     };
-                    let tmp = try!(is.read_fixed32());
+                    let tmp = r#try!(is.read_fixed32());
                     self.response_time_nsec = ::std::option::Option::Some(tmp);
                 },
                 14 => {
-                    try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.response_message));
+                    r#try!(::protobuf::rt::read_singular_bytes_into(wire_type, is, &mut self.response_message));
                 },
                 _ => {
-                    try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
+                    r#try!(::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields()));
                 },
             };
         }
@@ -1009,50 +1009,50 @@ impl ::protobuf::Message for Message {
         my_size
     }
 
-    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream) -> ::protobuf::ProtobufResult<()> {
+    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::ProtobufResult<()> {
         if let Some(v) = self.field_type {
-            try!(os.write_enum(1, v.value()));
+            r#try!(os.write_enum(1, v.value()));
         };
         if let Some(v) = self.socket_family {
-            try!(os.write_enum(2, v.value()));
+            r#try!(os.write_enum(2, v.value()));
         };
         if let Some(v) = self.socket_protocol {
-            try!(os.write_enum(3, v.value()));
+            r#try!(os.write_enum(3, v.value()));
         };
         if let Some(v) = self.query_address.as_ref() {
-            try!(os.write_bytes(4, &v));
+            r#try!(os.write_bytes(4, &v));
         };
         if let Some(v) = self.response_address.as_ref() {
-            try!(os.write_bytes(5, &v));
+            r#try!(os.write_bytes(5, &v));
         };
         if let Some(v) = self.query_port {
-            try!(os.write_uint32(6, v));
+            r#try!(os.write_uint32(6, v));
         };
         if let Some(v) = self.response_port {
-            try!(os.write_uint32(7, v));
+            r#try!(os.write_uint32(7, v));
         };
         if let Some(v) = self.query_time_sec {
-            try!(os.write_uint64(8, v));
+            r#try!(os.write_uint64(8, v));
         };
         if let Some(v) = self.query_time_nsec {
-            try!(os.write_fixed32(9, v));
+            r#try!(os.write_fixed32(9, v));
         };
         if let Some(v) = self.query_message.as_ref() {
-            try!(os.write_bytes(10, &v));
+            r#try!(os.write_bytes(10, &v));
         };
         if let Some(v) = self.query_zone.as_ref() {
-            try!(os.write_bytes(11, &v));
+            r#try!(os.write_bytes(11, &v));
         };
         if let Some(v) = self.response_time_sec {
-            try!(os.write_uint64(12, v));
+            r#try!(os.write_uint64(12, v));
         };
         if let Some(v) = self.response_time_nsec {
-            try!(os.write_fixed32(13, v));
+            r#try!(os.write_fixed32(13, v));
         };
         if let Some(v) = self.response_message.as_ref() {
-            try!(os.write_bytes(14, &v));
+            r#try!(os.write_bytes(14, &v));
         };
-        try!(os.write_unknown_fields(self.get_unknown_fields()));
+        r#try!(os.write_unknown_fields(self.get_unknown_fields()));
         ::std::result::Result::Ok(())
     }
 
@@ -1072,8 +1072,8 @@ impl ::protobuf::Message for Message {
         ::std::any::TypeId::of::<Message>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -1215,7 +1215,7 @@ impl ::std::cmp::PartialEq for Message {
 }
 
 impl ::std::fmt::Debug for Message {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         ::protobuf::text_format::fmt(self, f)
     }
 }

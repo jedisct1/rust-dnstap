@@ -1,6 +1,6 @@
-use context::*;
-use dns_message::*;
-use dnstap_builder::*;
+use crate::context::*;
+use crate::dns_message::*;
+use crate::dnstap_builder::*;
 use mio::*;
 use std::any::Any;
 use std::io;
@@ -85,37 +85,35 @@ impl DNSTapWriter {
         dnstap_pending_writer.context.connect();
         let mut events = Events::with_capacity(512);
         let dnstap_tx = dnstap_pending_writer.dnstap_tx.clone();
-        let tid = try!(
-            thread::Builder::new()
-                .name("dnstap".to_owned())
-                .spawn(move || {
-                    while dnstap_pending_writer
-                        .context
-                        .mio_poll
-                        .poll(&mut events, None)
-                        .is_ok()
-                    {
-                        for event in events.iter() {
-                            match event.token() {
-                                UNIX_SOCKET_TOK => dnstap_pending_writer.context.write_cb(event),
-                                NOTIFY_TOK => dnstap_pending_writer.context.message_cb(),
-                                TIMER_TOK => dnstap_pending_writer.context.connect(),
-                                _ => unreachable!(),
-                            }
+        let tid = r#try!(thread::Builder::new()
+            .name("dnstap".to_owned())
+            .spawn(move || {
+                while dnstap_pending_writer
+                    .context
+                    .mio_poll
+                    .poll(&mut events, None)
+                    .is_ok()
+                {
+                    for event in events.iter() {
+                        match event.token() {
+                            UNIX_SOCKET_TOK => dnstap_pending_writer.context.write_cb(event),
+                            NOTIFY_TOK => dnstap_pending_writer.context.message_cb(),
+                            TIMER_TOK => dnstap_pending_writer.context.connect(),
+                            _ => unreachable!(),
                         }
                     }
-                    if let Some(frame_stream) = dnstap_pending_writer.context.frame_stream {
-                        frame_stream.finish().unwrap();
-                    }
-                })
-        );
+                }
+                if let Some(frame_stream) = dnstap_pending_writer.context.frame_stream {
+                    frame_stream.finish().unwrap();
+                }
+            }));
         Ok(DNSTapWriter {
             dnstap_tx: dnstap_tx,
             tid: tid,
         })
     }
 
-    pub fn join(self) -> Result<(), Box<Any + Send + 'static>> {
+    pub fn join(self) -> Result<(), Box<dyn Any + Send + 'static>> {
         self.tid.join()
     }
 

@@ -1,8 +1,8 @@
-use dns_message::*;
+use crate::dns_message::*;
 use framestream::EncoderWriter;
-use mio::*;
 use mio::deprecated::{UnixSocket, UnixStream};
 use mio::timer::Timeout;
+use mio::*;
 use protobuf::*;
 use std::io::{self, BufWriter, Write};
 use std::path::PathBuf;

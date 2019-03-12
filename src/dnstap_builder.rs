@@ -1,7 +1,7 @@
 use std::path::{Path, PathBuf};
 use std::usize;
 
-use dnstap_writer::DNSTapPendingWriter;
+use crate::dnstap_writer::DNSTapPendingWriter;
 
 const DEFAULT_BACKLOG: usize = 4096;
 
