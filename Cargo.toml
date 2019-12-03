@@ -17,7 +17,7 @@ travis-ci = { repository = "jedisct1/rust-dnstap" }
 clippy = {version = "~0", optional = true}
 framestream = "^0.1.2"
 mio = "^0.6.6"
-protobuf = "^1.2.2"
+protobuf = "^2.8.1"
 
 [profile.release]
 lto = true
