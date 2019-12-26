@@ -3,6 +3,8 @@
 //! This crate implements the sender part of the [dnstap](http://dnstap.info/) protocol,
 //! a flexible, structured binary log format for DNS software.
 
+#![allow(deprecated)]
+
 mod context;
 mod dns_message;
 mod dnstap_builder;

@@ -36,9 +36,9 @@ impl DNSMessage {
         message_type: MessageType,
     ) -> DNSMessage {
         DNSMessage {
-            identity: identity,
-            version: version,
-            message_type: message_type,
+            identity,
+            version,
+            message_type,
             socket_family: None,
             socket_protocol: None,
             query_address: None,

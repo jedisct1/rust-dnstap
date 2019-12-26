@@ -31,18 +31,15 @@ impl DNSTapPendingWriter {
             .unwrap();
         assert!(builder.unix_socket_path.is_some());
         let context = Context {
-            mio_poll: mio_poll,
-            mio_timers: mio_timers,
+            mio_poll,
+            mio_timers,
             retry_timeout: None,
-            dnstap_rx: dnstap_rx,
+            dnstap_rx,
             unix_socket_path: builder.unix_socket_path,
             unix_stream: None,
             frame_stream: None,
         };
-        Ok(DNSTapPendingWriter {
-            dnstap_tx: dnstap_tx,
-            context: context,
-        })
+        Ok(DNSTapPendingWriter { dnstap_tx, context })
     }
 
     /// Spawns a new task handling writes to the socket.
@@ -85,7 +82,7 @@ impl DNSTapWriter {
         dnstap_pending_writer.context.connect();
         let mut events = Events::with_capacity(512);
         let dnstap_tx = dnstap_pending_writer.dnstap_tx.clone();
-        let tid = r#try!(thread::Builder::new()
+        let tid = (thread::Builder::new()
             .name("dnstap".to_owned())
             .spawn(move || {
                 while dnstap_pending_writer
@@ -106,11 +103,8 @@ impl DNSTapWriter {
                 if let Some(frame_stream) = dnstap_pending_writer.context.frame_stream {
                     frame_stream.finish().unwrap();
                 }
-            }));
-        Ok(DNSTapWriter {
-            dnstap_tx: dnstap_tx,
-            tid: tid,
-        })
+            }))?;
+        Ok(DNSTapWriter { dnstap_tx, tid })
     }
 
     pub fn join(self) -> Result<(), Box<dyn Any + Send + 'static>> {
