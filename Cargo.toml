@@ -15,7 +15,7 @@ edition = "2018"
 travis-ci = { repository = "jedisct1/rust-dnstap" }
 
 [dependencies]
-framestream = "0.1.4"
+framestream = "0.2.4"
 mio = "0.6"
 protobuf = "2.8"
 
