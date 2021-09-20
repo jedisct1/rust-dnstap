@@ -1332,6 +1332,10 @@ impl ::protobuf::reflect::ProtobufValue for SocketFamily {
 pub enum SocketProtocol {
     UDP = 1,
     TCP = 2,
+    DOT = 3,
+    DOH = 4,
+    DNSCryptUDP = 5,
+    DNSCryptTCP = 6,
 }
 
 impl ::protobuf::ProtobufEnum for SocketProtocol {
@@ -1343,6 +1347,10 @@ impl ::protobuf::ProtobufEnum for SocketProtocol {
         match value {
             1 => ::std::option::Option::Some(SocketProtocol::UDP),
             2 => ::std::option::Option::Some(SocketProtocol::TCP),
+            3 => ::std::option::Option::Some(SocketProtocol::DOT),
+            4 => ::std::option::Option::Some(SocketProtocol::DOH),
+            5 => ::std::option::Option::Some(SocketProtocol::DNSCryptUDP),
+            6 => ::std::option::Option::Some(SocketProtocol::DNSCryptTCP),
             _ => ::std::option::Option::None
         }
     }
@@ -1351,6 +1359,10 @@ impl ::protobuf::ProtobufEnum for SocketProtocol {
         static values: &'static [SocketProtocol] = &[
             SocketProtocol::UDP,
             SocketProtocol::TCP,
+            SocketProtocol::DOT,
+            SocketProtocol::DOH,
+            SocketProtocol::DNSCryptUDP,
+            SocketProtocol::DNSCryptTCP,
         ];
         values
     }
@@ -1408,8 +1420,10 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     RY\x10\x07\x12\x16\n\x12FORWARDER_RESPONSE\x10\x08\x12\x0e\n\nSTUB_QUERY\
     \x10\t\x12\x11\n\rSTUB_RESPONSE\x10\n\x12\x0e\n\nTOOL_QUERY\x10\x0b\x12\
     \x11\n\rTOOL_RESPONSE\x10\x0c\x1a\0:\0*%\n\x0cSocketFamily\x12\x08\n\x04\
-    INET\x10\x01\x12\t\n\x05INET6\x10\x02\x1a\0*$\n\x0eSocketProtocol\x12\
-    \x07\n\x03UDP\x10\x01\x12\x07\n\x03TCP\x10\x02\x1a\0B\0b\x06proto2\
+    INET\x10\x01\x12\t\n\x05INET6\x10\x02\x1a\0*X\n\x0eSocketProtocol\x12\
+    \x07\n\x03UDP\x10\x01\x12\x07\n\x03TCP\x10\x02\x12\x07\n\x03DOT\x10\x03\
+    \x12\x07\n\x03DOH\x10\x04\x12\x0f\n\x0bDNSCryptUDP\x10\x05\x12\x0f\n\x0b\
+    DNSCryptTCP\x10\x06\x1a\0B\0b\x06proto2\
 ";
 
 static mut file_descriptor_proto_lazy: ::protobuf::lazy::Lazy<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::lazy::Lazy {
