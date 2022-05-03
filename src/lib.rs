@@ -11,7 +11,7 @@ mod dnstap_builder;
 mod dnstap_pb;
 mod dnstap_writer;
 
-pub use crate::dnstap_pb::Message_Type as MessageType;
+pub use crate::dnstap_pb::message::Type as MessageType;
 pub use crate::dnstap_pb::SocketFamily;
 pub use crate::dnstap_pb::SocketProtocol;
 

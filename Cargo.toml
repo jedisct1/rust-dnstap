@@ -17,10 +17,10 @@ travis-ci = { repository = "jedisct1/rust-dnstap" }
 [dependencies]
 framestream = "0.2.4"
 mio = "0.6"
-protobuf = "2.25"
+protobuf = "3.0.1"
 
 [build-dependencies]
-protobuf-codegen-pure = "2"
+protobuf-codegen = "3.0.1"
 
 [profile.release]
 lto = true

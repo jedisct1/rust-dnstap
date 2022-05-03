@@ -62,9 +62,9 @@ impl DNSMessage {
         if let Some(version) = self.version {
             d.set_version(version);
         }
-        d.set_field_type(dnstap_pb::Dnstap_Type::MESSAGE);
+        d.set_type(dnstap_pb::dnstap::Type::MESSAGE);
         let mut msg = dnstap_pb::Message::new();
-        msg.set_field_type(self.message_type);
+        msg.set_type(self.message_type);
         let mut socket_family = self.socket_family;
         socket_family = match self.query_address {
             Some(IpAddr::V4(ip4)) => {
@@ -122,7 +122,7 @@ impl DNSMessage {
             msg.set_response_time_sec(response_time.as_secs());
             msg.set_response_time_nsec(response_time.subsec_nanos());
         }
-        d.set_message(msg);
+        d.message = Some(msg).into();
         d
     }
 }

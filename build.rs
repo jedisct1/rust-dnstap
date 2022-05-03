@@ -1,11 +1,10 @@
 fn main() {
-    protobuf_codegen_pure::Codegen::new()
+    protobuf_codegen::Codegen::new()
+        .pure()
         .out_dir("src")
         .inputs(["src/dnstap_pb.proto"])
         .include("src")
-        .customize(protobuf_codegen_pure::Customize {
-            ..Default::default()
-        })
+        .customize(protobuf_codegen::Customize::default())
         .run()
         .expect("protoc");
 }
