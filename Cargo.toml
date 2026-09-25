@@ -1,9 +1,9 @@
 [package]
 name = "dnstap"
 version = "0.1.7"
-description = "An implementation of the dnstap protocol"
+description = "Dnstap protocol library for DNS query and response logging with Protocol Buffers and Frame Streams."
 authors = ["Frank Denis <github@pureftpd.org>"]
-keywords = ["dns"]
+keywords = ["dns", "dnstap", "logging", "protobuf", "framestream"]
 readme = "README.md"
 license = "ISC"
 homepage = "https://github.com/jedisct1/rust-dnstap"
