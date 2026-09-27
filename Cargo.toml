@@ -1,6 +1,6 @@
 [package]
 name = "dnstap"
-version = "0.1.8"
+version = "0.1.9"
 description = "Dnstap protocol library for DNS query and response logging with Protocol Buffers and Frame Streams."
 authors = ["Frank Denis <github@pureftpd.org>"]
 keywords = ["dns", "dnstap", "logging", "protobuf", "framestream"]
@@ -24,7 +24,7 @@ include = [
 travis-ci = { repository = "jedisct1/rust-dnstap" }
 
 [dependencies]
-framestream = "0.2.5"
+framestream = "0.2.6"
 mio = { version = "1.2", features = ["os-poll", "os-ext", "net"] }
 protobuf = "3.7.2"
 
