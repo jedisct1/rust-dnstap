@@ -10,6 +10,15 @@ homepage = "https://github.com/jedisct1/rust-dnstap"
 repository = "https://github.com/jedisct1/rust-dnstap"
 categories = ["encoding", "network-programming", "value-formatting"]
 edition = "2018"
+include = [
+    "LICENSE",
+    "README.md",
+    "build.rs",
+    "src/*.rs",
+    "!src/dnstap_pb.rs",
+    "!src/mod.rs",
+    "src/*.proto",
+]
 
 [badges]
 travis-ci = { repository = "jedisct1/rust-dnstap" }
