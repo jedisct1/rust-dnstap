@@ -16,7 +16,7 @@ travis-ci = { repository = "jedisct1/rust-dnstap" }
 
 [dependencies]
 framestream = "0.2.5"
-mio = "0.6"
+mio = { version = "1.2", features = ["os-poll", "os-ext", "net"] }
 protobuf = "3.7.2"
 
 [build-dependencies]

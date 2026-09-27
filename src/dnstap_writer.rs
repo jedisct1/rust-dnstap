@@ -1,13 +1,16 @@
 use crate::context::*;
 use crate::dns_message::*;
 use crate::dnstap_builder::*;
-use mio::*;
+use mio::{Events, Poll, Waker};
 use std::any::Any;
 use std::io;
+use std::sync::mpsc::{self, SyncSender, TrySendError};
+use std::sync::Arc;
 use std::thread;
 
 pub struct DNSTapPendingWriter {
-    dnstap_tx: channel::SyncSender<DNSMessage>,
+    dnstap_tx: SyncSender<DNSMessage>,
+    waker: Arc<Waker>,
     context: Context,
 }
 
@@ -15,31 +18,25 @@ impl DNSTapPendingWriter {
     /// Creates a `DNSTapPendingWriter` object. The communication channel is established at this
     /// point, and the `sender()` function can be used in order to get `Sender` objects.
     pub fn listen(builder: DNSTapBuilder) -> Result<DNSTapPendingWriter, &'static str> {
-        let (dnstap_tx, dnstap_rx) = channel::sync_channel(builder.backlog);
-        let mio_poll = Poll::new().unwrap();
-        mio_poll
-            .register(
-                &dnstap_rx,
-                NOTIFY_TOK,
-                Ready::readable(),
-                PollOpt::edge() | PollOpt::oneshot(),
-            )
-            .unwrap();
-        let mio_timers = timer::Timer::default();
-        mio_poll
-            .register(&mio_timers, TIMER_TOK, Ready::readable(), PollOpt::edge())
-            .unwrap();
+        let (dnstap_tx, dnstap_rx) = mpsc::sync_channel(builder.backlog);
+        let mio_poll = Poll::new().map_err(|_| "Unable to create a poll instance")?;
+        let waker = Arc::new(
+            Waker::new(mio_poll.registry(), NOTIFY_TOK).map_err(|_| "Unable to create a waker")?,
+        );
         assert!(builder.unix_socket_path.is_some());
         let context = Context {
             mio_poll,
-            mio_timers,
-            retry_timeout: None,
+            retry_deadline: None,
             dnstap_rx,
             unix_socket_path: builder.unix_socket_path,
             unix_stream: None,
             frame_stream: None,
         };
-        Ok(DNSTapPendingWriter { dnstap_tx, context })
+        Ok(DNSTapPendingWriter {
+            dnstap_tx,
+            waker,
+            context,
+        })
     }
 
     /// Spawns a new task handling writes to the socket.
@@ -50,7 +47,10 @@ impl DNSTapPendingWriter {
     /// Returns a cloneable `Sender` object that can used to send DNS messages.
     #[inline]
     pub fn sender(&self) -> Sender {
-        Sender(self.dnstap_tx.clone())
+        Sender {
+            dnstap_tx: self.dnstap_tx.clone(),
+            waker: self.waker.clone(),
+        }
     }
 }
 
@@ -72,39 +72,47 @@ impl DNSTapPendingWriter {
 /// dnstap_writer.join().unwrap();
 /// ```
 pub struct DNSTapWriter {
-    dnstap_tx: channel::SyncSender<DNSMessage>,
+    dnstap_tx: SyncSender<DNSMessage>,
+    waker: Arc<Waker>,
     tid: thread::JoinHandle<()>,
 }
 
 impl DNSTapWriter {
     /// Spawns a new task handling writes to the socket.
-    pub fn start(mut dnstap_pending_writer: DNSTapPendingWriter) -> io::Result<DNSTapWriter> {
-        dnstap_pending_writer.context.connect();
+    pub fn start(dnstap_pending_writer: DNSTapPendingWriter) -> io::Result<DNSTapWriter> {
+        let DNSTapPendingWriter {
+            dnstap_tx,
+            waker,
+            mut context,
+        } = dnstap_pending_writer;
+        context.connect();
         let mut events = Events::with_capacity(512);
-        let dnstap_tx = dnstap_pending_writer.dnstap_tx.clone();
-        let tid = (thread::Builder::new()
+        let tid = thread::Builder::new()
             .name("dnstap".to_owned())
             .spawn(move || {
-                while dnstap_pending_writer
-                    .context
-                    .mio_poll
-                    .poll(&mut events, None)
-                    .is_ok()
-                {
+                loop {
+                    let timeout = context.poll_timeout();
+                    if context.mio_poll.poll(&mut events, timeout).is_err() {
+                        break;
+                    }
+                    context.maybe_retry();
                     for event in events.iter() {
                         match event.token() {
-                            UNIX_SOCKET_TOK => dnstap_pending_writer.context.write_cb(event),
-                            NOTIFY_TOK => dnstap_pending_writer.context.message_cb(),
-                            TIMER_TOK => dnstap_pending_writer.context.connect(),
+                            UNIX_SOCKET_TOK => context.write_cb(event),
+                            NOTIFY_TOK => context.message_cb(),
                             _ => unreachable!(),
                         }
                     }
                 }
-                if let Some(frame_stream) = dnstap_pending_writer.context.frame_stream {
+                if let Some(frame_stream) = context.frame_stream {
                     frame_stream.finish().unwrap();
                 }
-            }))?;
-        Ok(DNSTapWriter { dnstap_tx, tid })
+            })?;
+        Ok(DNSTapWriter {
+            dnstap_tx,
+            waker,
+            tid,
+        })
     }
 
     pub fn join(self) -> Result<(), Box<dyn Any + Send + 'static>> {
@@ -114,18 +122,26 @@ impl DNSTapWriter {
     /// Returns a cloneable `Sender` object that can used to send DNS messages.
     #[inline]
     pub fn sender(&self) -> Sender {
-        Sender(self.dnstap_tx.clone())
+        Sender {
+            dnstap_tx: self.dnstap_tx.clone(),
+            waker: self.waker.clone(),
+        }
     }
 }
 
 /// `Sender` is a cloneable structure to send DNS messages.
 #[derive(Clone)]
-pub struct Sender(channel::SyncSender<DNSMessage>);
+pub struct Sender {
+    dnstap_tx: SyncSender<DNSMessage>,
+    waker: Arc<Waker>,
+}
 
 impl Sender {
     /// Sends a DNS message.
     #[inline]
-    pub fn send(&self, dns_message: DNSMessage) -> Result<(), channel::TrySendError<DNSMessage>> {
-        self.0.try_send(dns_message)
+    pub fn send(&self, dns_message: DNSMessage) -> Result<(), TrySendError<DNSMessage>> {
+        self.dnstap_tx.try_send(dns_message)?;
+        let _ = self.waker.wake();
+        Ok(())
     }
 }
